@@ -20,18 +20,20 @@ public class Model {
 	private PowerOutagesDAO dao;
 	private Graph<Nerc, DefaultWeightedEdge> grafo;
 	private Map<Integer, Nerc> nercMap;
-	//private Set<Neighbor> neigSet;
+	private Simulatore sim;
+	private List<PowerOutages> poList;
 	
 	public Model() {
 		dao = new PowerOutagesDAO();
 		grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 		nercMap = new HashMap<>();
-		//neigSet = new HashSet<Neighbor>();
+		sim = new Simulatore();
 		
 		List<Nerc> list = dao.loadAllNercs();
 		for(Nerc n : list) {
 			nercMap.put(n.getId(), n);
 		}
+		poList = dao.getPowerOutages();
 	}
 	
 	public void creaGrafo() {
@@ -78,7 +80,8 @@ public class Model {
 	}
 
 	public void simula(int k) {
-		
+		sim.init(k, poList, nercMap,this.grafo);
+		sim.run();
 		
 	}
 
